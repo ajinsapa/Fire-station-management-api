@@ -140,10 +140,34 @@ class IncidentView(ViewSet):
     permission_classes=[permissions.IsAuthenticated]
     
 
-    def list(self,request,*args,**kwargs):
-        qs=Incident.objects.all()
-        serializer=IncidentSerializer(qs,many=True)
-        return Response(data=serializer.data)
+    # def list(self,request,*args,**kwargs):
+    #     qs=Incident.objects.all()
+    #     serializer=IncidentSerializer(qs,many=True)
+    #     return Response(data=serializer.data)
+    
+    
+    
+    def list(self, request, *args, **kwargs):
+        qs = Incident.objects.all()
+        incident_data = []
+        
+        for incident in qs:
+            incident_serializer = IncidentSerializer(incident)
+            incident_status_qs = incident.incidentstatus_set.all()
+            if incident_status_qs.exists():
+                incident_status_serializer = IncidentStatusSerializer(incident_status_qs, many=True)
+                incident_data.append({
+                    'incident': incident_serializer.data,
+                    'incident_status': incident_status_serializer.data
+                })
+            else:
+                incident_data.append({
+                    'incident': incident_serializer.data,
+                    'incident_status': None
+                })
+        
+        return Response(incident_data)   
+        
     
     
     def retrieve(self,request,*args,**kwargs):
