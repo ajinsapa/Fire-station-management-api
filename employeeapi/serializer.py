@@ -31,15 +31,17 @@ class EquipmentSerializer(serializers.ModelSerializer):
         model=Equipment
         fields="__all__"
         
-
-class TrainingSerializer(serializers.ModelSerializer):
-    employee=serializers.CharField(read_only=True)
-    training_list=serializers.CharField(read_only=True)
-    class Meta:
-        model = Training
-        fields = "__all__"
-
+        
 class TrainingListSerializer(serializers.ModelSerializer):
     class Meta:
         model = TrainingList
         fields = "__all__"
+        
+
+class TrainingSerializer(serializers.ModelSerializer):
+    employee=serializers.CharField(read_only=True)
+    training_list=TrainingListSerializer()
+    class Meta:
+        model = Training
+        fields = "__all__"
+
