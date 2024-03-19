@@ -80,7 +80,7 @@ class Incident(models.Model):
     
     
 class IncidentStatus(models.Model):
-    Incident=models.ForeignKey(Incident,on_delete=models.CASCADE,unique=True)
+    Incident=models.OneToOneField(Incident,on_delete=models.CASCADE,unique=True)
     options=[
         ('Alerted', 'Alerted'),
         ('Saved', 'Saved'),
@@ -94,12 +94,12 @@ class IncidentStatus(models.Model):
 class Team(models.Model):
     name = models.CharField(max_length=100)
     employees = models.ManyToManyField(Employee)
+    is_available=models.BooleanField(default=True)
+
 
 class Team_assign(models.Model):
-    incident = models.ForeignKey(Incident, on_delete=models.CASCADE)
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
-    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
-    equipments = models.ForeignKey(Equipment, on_delete=models.CASCADE)
+    incident = models.OneToOneField(Incident, on_delete=models.CASCADE,unique=True)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
     
     
 class Feedback(models.Model):

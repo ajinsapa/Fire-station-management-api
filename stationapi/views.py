@@ -187,17 +187,6 @@ class IncidentView(ViewSet):
         }   
         return Response(response_data)
     
-
-    @action(methods=["post"],detail=True)
-    def assign_team(self,request,*args,**kwargs):
-        serializer=AssignteamSerializer(data=request.data)
-        incident_id=kwargs.get("pk")
-        incident_obj=Incident.objects.get(id=incident_id)
-        if serializer.is_valid():
-            serializer.save(incident=incident_obj)
-            return Response(data=serializer.data)
-        else:
-            return Response(data=serializer.errors)
         
     @action(methods=["post"],detail=True)
     def incident_status(self,request,*args,**kwargs):
@@ -218,7 +207,9 @@ class IncidentView(ViewSet):
         qs=Feedback.objects.filter(incident=incident_obj)
         serializer=FeedbackSerializer(qs,many=True)
         return Response(data=serializer.data)
-    
+
+
+
     
 class IncidentStatusView(ViewSet):
     authentication_classes=[authentication.TokenAuthentication]
@@ -308,8 +299,30 @@ class StationCompletedStatusView(APIView):
         return Response(employee_data)
     
         
-      
+# def assign_team(self,request,*args,**kwargs):
+#     serializer=AssignteamSerializer(data=request.data)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response(data=serializer.data)
+#     else:
+#         return Response(data=serializer.errors)
+     
+     
+     
+class assign_team(APIView):
+    def post(self,request,*args,**kwargs):
+        serializer=AssignteamSerializer(data=request.data)
+        if serializer.is_valid():
+            
+            serializer.save()
+            return Response(data=serializer.data)
+        else:
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 
-# def sign_out(request):
-#     logout(request)
-#     return render("signin")
+class available_team(APIView):
+    def get(self,request,*args,**kwargs):
+        qs=Team.objects.filter(is_available=True)
+        serializer=TeamSerializer(qs,many=True)
+        return Response(data=serializer.data)
+

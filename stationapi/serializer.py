@@ -69,6 +69,14 @@ class AssignteamSerializer(serializers.ModelSerializer):
         model=Team_assign
         fields="__all__"
         
+    
+    def create(self, validated_data):
+        team_assign = super().create(validated_data)
+        team = team_assign.team
+        team.is_available = False
+        team.save()
+        return team_assign
+        
 
 class VehicleSerializer(serializers.ModelSerializer):
     class Meta:
