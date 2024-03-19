@@ -95,11 +95,10 @@ class Team(models.Model):
     name = models.CharField(max_length=100)
     employees = models.ManyToManyField(Employee)
 
+
 class Team_assign(models.Model):
     incident = models.ForeignKey(Incident, on_delete=models.CASCADE)
     team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
-    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
-    equipments = models.ForeignKey(Equipment, on_delete=models.CASCADE)
     
     
 class Feedback(models.Model):

@@ -19,6 +19,7 @@ urlpatterns = [
     path("register/",views.StationCreateView.as_view(),name="signin"),
     path("token/",ObtainAuthToken.as_view(),name="token"),
     path("trainingstatus/",views.StationCompletedStatusView.as_view(),name="trainingstatus"),
+    path("assign_team/",views.assign_team,name="assign_team"),
     # path("logout/",views.sign_out,name="logout"),
 
 ] +router.urls
