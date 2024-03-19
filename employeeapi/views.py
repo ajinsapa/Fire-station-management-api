@@ -117,7 +117,7 @@ class TrainingListViewSet(ViewSet):
         training = Training.objects.get(id=id)
         serializer=TrainingSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(employee=employee,training=training)
+            serializer.save(employee=employee,training_list=training)
             return Response(data=serializer.data)
         else:
             return Response(data=serializer.errors)

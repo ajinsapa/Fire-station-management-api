@@ -80,7 +80,7 @@ class Incident(models.Model):
     
     
 class IncidentStatus(models.Model):
-    Incident=models.ForeignKey(Incident,on_delete=models.CASCADE)
+    Incident=models.ForeignKey(Incident,on_delete=models.CASCADE,unique=True)
     options=[
         ('Alerted', 'Alerted'),
         ('Saved', 'Saved'),

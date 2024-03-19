@@ -1,12 +1,12 @@
 from django.contrib import admin
-from stationapi.models import Station,CustomUser,Employee,Vehicle,Equipment,Incident,Team_assign,Feedback,Training,TrainingList
+from stationapi.models import Station,CustomUser,Employee,Vehicle,Equipment,Incident,Team_assign,Feedback,Training,TrainingList,IncidentStatus
 
 # Register your models here.
 
 
 admin.site.register(CustomUser)
 admin.site.register(Station)
-admin.site.register(Employee)
+admin.site.register(IncidentStatus)
 admin.site.register(Vehicle)
 admin.site.register(Equipment)
 admin.site.register(Incident)
