@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from stationapi.models import Station,Employee,Equipment,Incident,Team,User,Vehicle,Feedback,Certification,TrainingList,Training,IncidentStatus
-from stationapi.serializer import StationSerializer,EmployeeSerializer,UserSerializer,EquipmentSerializer,IncidentSerializer,TeamSerializer,AssignteamSerializer,VehicleSerializer,FeedbackSerializer,CertificationSerializer,TrainingListSerializer,IncidentStatusSerializer
+from stationapi.serializer import StationSerializer,EmployeeSerializer,UserSerializer,EquipmentSerializer,IncidentSerializer,TeamSerializer,AssignteamSerializer,VehicleSerializer,FeedbackSerializer,CertificationSerializer,TrainingListSerializer,IncidentStatusSerializer,TeamViewSerializer
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet,ViewSet
 from django.urls import reverse
@@ -108,13 +108,13 @@ class TeamCreateView(ViewSet):
     
     def list(self,request,*args,**kwargs):
         qs=Team.objects.all()
-        serializer=TeamSerializer(qs,many=True)
+        serializer=TeamViewSerializer(qs,many=True)
         return Response(data=serializer.data)
     
     def retrieve(self,request,*args,**kwargs):
         id=kwargs.get("pk")
         qs=Team.objects.get(id=id)
-        serializer=TeamSerializer(qs)
+        serializer=TeamViewSerializer(qs)
         return Response(data=serializer.data)
     
     def destroy(self, request, *args, **kwargs):
@@ -144,7 +144,6 @@ class IncidentView(ViewSet):
     #     qs=Incident.objects.all()
     #     serializer=IncidentSerializer(qs,many=True)
     #     return Response(data=serializer.data)
-    
     
     
     def list(self, request, *args, **kwargs):

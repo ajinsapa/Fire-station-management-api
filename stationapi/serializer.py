@@ -51,6 +51,13 @@ class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model=Team
         fields="__all__"
+
+
+class TeamViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Team
+        fields="__all__"
+
         
 class AssignteamSerializer(serializers.ModelSerializer):
     class Meta:
