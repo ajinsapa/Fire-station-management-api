@@ -114,7 +114,7 @@ class TrainingListViewSet(ViewSet):
     def create_training(self,request,*args,**kwargs):
         employee=request.user.employee
         id = kwargs.get("pk")
-        training = Training.objects.get(id=id)
+        training = TrainingList.objects.get(id=id)
         serializer=TrainingSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(employee=employee,training_list=training)

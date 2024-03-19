@@ -167,14 +167,26 @@ class IncidentView(ViewSet):
                 })
         
         return Response(incident_data)   
-        
     
-    
-    def retrieve(self,request,*args,**kwargs):
-        id=kwargs.get("pk")
-        qs=Incident.objects.get(id=id)
-        serializer=IncidentSerializer(qs)
-        return Response(data=serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            incident = Incident.objects.get(pk=kwargs.get("pk"))
+        except Incident.DoesNotExist:
+            return Response({"error": "Incident does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        incident_serializer = IncidentSerializer(incident)
+        try:
+            incident_status = incident.incidentstatus_set.get()
+            incident_status_serializer = IncidentStatusSerializer(incident_status)
+            incident_status_data = incident_status_serializer.data
+        except IncidentStatus.DoesNotExist:
+            incident_status_data = None
+
+        response_data = {
+            'incident': incident_serializer.data,
+            'incident_status': incident_status_data
+        }   
+        return Response(response_data)
     
 
     @action(methods=["post"],detail=True)
@@ -207,6 +219,7 @@ class IncidentView(ViewSet):
         qs=Feedback.objects.filter(incident=incident_obj)
         serializer=FeedbackSerializer(qs,many=True)
         return Response(data=serializer.data)
+    
     
 class IncidentStatusView(ViewSet):
     authentication_classes=[authentication.TokenAuthentication]
