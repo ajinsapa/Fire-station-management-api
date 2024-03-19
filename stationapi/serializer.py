@@ -54,6 +54,11 @@ class TeamSerializer(serializers.ModelSerializer):
 
 
 class TeamViewSerializer(serializers.ModelSerializer):
+    employees=serializers.SerializerMethodField()
+
+    def get_employees(self, obj):
+        return [employee.employee.name for employee in obj.employees.all()]
+    
     class Meta:
         model=Team
         fields="__all__"
