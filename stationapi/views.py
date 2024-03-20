@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from stationapi.models import Station,Employee,Equipment,Incident,Team,User,Vehicle,Feedback,Certification,TrainingList,Training,IncidentStatus
-from stationapi.serializer import StationSerializer,EmployeeSerializer,UserSerializer,EquipmentSerializer,IncidentSerializer,TeamSerializer,AssignteamSerializer,VehicleSerializer,FeedbackSerializer,CertificationSerializer,TrainingListSerializer,IncidentStatusSerializer,TeamViewSerializer
+from stationapi.models import Station,Employee,Equipment,Incident,Team,User,Vehicle,Feedback,Certification,TrainingList,Training,IncidentStatus,Team_assign
+from stationapi.serializer import StationSerializer,EmployeeSerializer,UserSerializer,EquipmentSerializer,IncidentSerializer,TeamSerializer,AssignteamSerializer,VehicleSerializer,FeedbackSerializer,CertificationSerializer,TrainingListSerializer,IncidentStatusSerializer,TeamViewSerializer,AssignteamViewSerializer
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet,ViewSet
 from django.urls import reverse
@@ -152,14 +152,14 @@ class IncidentView(ViewSet):
         
         for incident in qs:
             incident_serializer = IncidentSerializer(incident)
-            incident_status_qs = incident.incidentstatus_set.all()
-            if incident_status_qs.exists():
-                incident_status_serializer = IncidentStatusSerializer(incident_status_qs, many=True)
+            try:
+                incident_status = incident.incidentstatus  # Access the related IncidentStatus
+                incident_status_serializer = IncidentStatusSerializer(incident_status)
                 incident_data.append({
                     'incident': incident_serializer.data,
                     'incident_status': incident_status_serializer.data
                 })
-            else:
+            except IncidentStatus.DoesNotExist:
                 incident_data.append({
                     'incident': incident_serializer.data,
                     'incident_status': None
@@ -173,19 +173,30 @@ class IncidentView(ViewSet):
             incident = Incident.objects.get(pk=kwargs.get("pk"))
         except Incident.DoesNotExist:
             return Response({"error": "Incident does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        
         incident_serializer = IncidentSerializer(incident)
         try:
-            incident_status = incident.incidentstatus_set.get()
+            incident_status = incident.incidentstatus
             incident_status_serializer = IncidentStatusSerializer(incident_status)
             incident_status_data = incident_status_serializer.data
         except IncidentStatus.DoesNotExist:
             incident_status_data = None
-
         response_data = {
             'incident': incident_serializer.data,
             'incident_status': incident_status_data
         }   
         return Response(response_data)
+    
+    @action(methods=["post"],detail=True)
+    def assign_team(self,request,*args,**kwargs):
+        serializer=AssignteamSerializer(data=request.data)
+        incident_id=kwargs.get("pk")
+        incident_obj=Incident.objects.get(id=incident_id)
+        if serializer.is_valid():
+            serializer.save(incident=incident_obj)
+            return Response(data=serializer.data)
+        else:
+            return Response(data=serializer.errors)
     
         
     @action(methods=["post"],detail=True)
@@ -208,6 +219,23 @@ class IncidentView(ViewSet):
         serializer=FeedbackSerializer(qs,many=True)
         return Response(data=serializer.data)
 
+
+
+class AssignTeamView(ViewSet):
+    authentication_classes=[authentication.TokenAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+    
+    def list(self,request,*args,**kwargs):
+        qs=Team_assign.objects.all()
+        serializer=AssignteamViewSerializer(qs,many=True)
+        return Response(data=serializer.data)
+    
+
+    def retrieve(self,request,*args,**kwargs):
+        id=kwargs.get("pk")
+        qs=Team_assign.objects.get(id=id)
+        serializer=AssignteamViewSerializer(qs)
+        return Response(data=serializer.data)
 
 
     
@@ -309,20 +337,4 @@ class StationCompletedStatusView(APIView):
      
      
      
-class assign_team(APIView):
-    def post(self,request,*args,**kwargs):
-        serializer=AssignteamSerializer(data=request.data)
-        if serializer.is_valid():
-            
-            serializer.save()
-            return Response(data=serializer.data)
-        else:
-            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-
-class available_team(APIView):
-    def get(self,request,*args,**kwargs):
-        qs=Team.objects.filter(is_available=True)
-        serializer=TeamSerializer(qs,many=True)
-        return Response(data=serializer.data)
 

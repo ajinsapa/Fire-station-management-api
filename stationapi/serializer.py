@@ -65,17 +65,18 @@ class TeamViewSerializer(serializers.ModelSerializer):
 
         
 class AssignteamSerializer(serializers.ModelSerializer):
+    incident=serializers.CharField(read_only=True)
+    class Meta:
+        model=Team_assign
+        fields="__all__"
+
+class AssignteamViewSerializer(serializers.ModelSerializer):
+    incident=IncidentSerializer()
+    team=TeamSerializer()
     class Meta:
         model=Team_assign
         fields="__all__"
         
-    
-    def create(self, validated_data):
-        team_assign = super().create(validated_data)
-        team = team_assign.team
-        team.is_available = False
-        team.save()
-        return team_assign
         
 
 class VehicleSerializer(serializers.ModelSerializer):

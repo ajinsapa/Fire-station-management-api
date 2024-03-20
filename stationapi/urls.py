@@ -13,14 +13,13 @@ router.register("vehicle",views.VehicleView,basename="vehicles-list")
 router.register("certificate",views.CertificationViewSet,basename="certificate")
 router.register("trainings",views.TrainingListViewSet,basename="trainings")
 router.register("incidentstatus",views.IncidentStatusView,basename="incidentstatus")
+router.register("assignteamslist",views.AssignTeamView,basename="assignteamslist")
 
 
 urlpatterns = [
     path("register/",views.StationCreateView.as_view(),name="signin"),
     path("token/",ObtainAuthToken.as_view(),name="token"),
     path("trainingstatus/",views.StationCompletedStatusView.as_view(),name="trainingstatus"),
-    path("assign_team/",views.assign_team.as_view(),name="assign_team"),
-    path("assign_team/available_team/",views.available_team.as_view(),name="available_team"),
     # path("logout/",views.sign_out,name="logout"),
 
 ] +router.urls
