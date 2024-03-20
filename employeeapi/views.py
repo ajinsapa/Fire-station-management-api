@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from employeeapi.serializer import EmployeeSerializer,VehicleSerializer,EquipmentSerializer,TrainingSerializer,TrainingListSerializer
+from employeeapi.serializer import EmployeeSerializer,VehicleSerializer,EquipmentSerializer,TrainingSerializer,TrainingListSerializer,TrainingViewSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from stationapi.models import Vehicle,Team_assign,Team,Equipment,Training,TrainingList
@@ -132,13 +132,13 @@ class TrainingViewSet(ViewSet):
     def list(self,request,*args,**kwargs):
         employee=request.user.employee
         qs=Training.objects.filter(employee=employee)
-        serializer=TrainingSerializer(qs,many=True)
+        serializer=TrainingViewSerializer(qs,many=True)
         return Response(data=serializer.data)
     
     def retrieve(self,request,*args,**kwargs):
         id=kwargs.get("pk")
         qs=Training.objects.get(id=id)
-        serializer=TrainingSerializer(qs)
+        serializer=TrainingViewSerializer(qs)
         return Response(data=serializer.data)
         
 

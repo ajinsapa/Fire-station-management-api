@@ -40,6 +40,14 @@ class TrainingListSerializer(serializers.ModelSerializer):
 
 class TrainingSerializer(serializers.ModelSerializer):
     employee=serializers.CharField(read_only=True)
+    training_list=serializers.CharField(read_only=True)
+    class Meta:
+        model = Training
+        fields = "__all__"
+
+
+class TrainingViewSerializer(serializers.ModelSerializer):
+    employee=serializers.CharField(read_only=True)
     training_list=TrainingListSerializer()
     class Meta:
         model = Training
