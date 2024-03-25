@@ -20,6 +20,7 @@ urlpatterns = [
     path("register/",views.StationCreateView.as_view(),name="signin"),
     path("token/",ObtainAuthToken.as_view(),name="token"),
     path("trainingstatus/",views.StationCompletedStatusView.as_view(),name="trainingstatus"),
+    path("available_team/",views.available_team.as_view(),name="available_team"),
     # path("logout/",views.sign_out,name="logout"),
 
 ] +router.urls

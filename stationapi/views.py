@@ -336,5 +336,11 @@ class StationCompletedStatusView(APIView):
 #         return Response(data=serializer.errors)
      
      
-     
-
+class available_team(APIView):  
+    authentication_classes=[authentication.TokenAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+  
+    def get(self,request,*args,**kwargs):
+        qs=Team.objects.filter(is_available=True)
+        serializer=TeamViewSerializer(qs,many=True)
+        return Response(data=serializer.data)
