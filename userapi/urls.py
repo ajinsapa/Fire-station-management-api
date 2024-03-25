@@ -6,6 +6,8 @@ from rest_framework.authtoken.views import ObtainAuthToken
 
 router=DefaultRouter()
 router.register("incident",views.IncidentView,basename="incident")
+router.register("guestincident",views.GuestIncidentView,basename="incident")
+
 
 
 

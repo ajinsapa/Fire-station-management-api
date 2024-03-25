@@ -77,3 +77,15 @@ class IncidentView(ViewSet):
 #     if user.is_authenticated:
 #         user.set_inactive()
 #     return render("signin")
+    
+
+
+class GuestIncidentView(ViewSet):
+    
+    def create(self,request,*args,**kwargs):
+        serializer=IncidentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data)
+        else:
+            return Response(data=serializer.errors)
