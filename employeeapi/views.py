@@ -93,6 +93,25 @@ class VehicleView(ViewSet):
             return Response({"msg": "Vehicle not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
+    @action(methods=['post'], detail=True)
+    def make_available(self,request,*args,**kwargs):
+        id = kwargs.get("pk")
+        vehicle = Vehicle.objects.get(id=id)
+        vehicle.is_available="True"
+        vehicle.save()
+        return response("vehicle made available")
+
+
+
+    @action(methods=['post'], detail=True)
+    def make_unavailable(self,request,*args,**kwargs):
+        id = kwargs.get("pk")
+        vehicle = Vehicle.objects.get(id=id)
+        vehicle.is_available="False"
+        vehicle.save()
+        return response("vehicle made unavailable")
+
+
 
 class TrainingListViewSet(ViewSet):
     authentication_classes=[authentication.TokenAuthentication]
