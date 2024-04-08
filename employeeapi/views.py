@@ -58,6 +58,26 @@ class EquipmentView(ViewSet):
             return Response({"msg": "Equipment removed"})
         except Equipment.DoesNotExist:
             return Response({"msg": "Equipment not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+    @action(methods=['post'], detail=True)
+    def make_available(self,request,*args,**kwargs):
+        id = kwargs.get("pk")
+        equipment = Equipment.objects.get(id=id)
+        equipment.is_available="True"
+        equipment.save()
+        return Response("Equipment made available")
+
+
+
+    @action(methods=['post'], detail=True)
+    def make_unavailable(self,request,*args,**kwargs):
+        id = kwargs.get("pk")
+        equipment = Equipment.objects.get(id=id)
+        equipment.is_available="False"
+        equipment.save()
+        return Response("Equipment made unavailable")
         
         
 class VehicleView(ViewSet):
@@ -99,7 +119,7 @@ class VehicleView(ViewSet):
         vehicle = Vehicle.objects.get(id=id)
         vehicle.is_available="True"
         vehicle.save()
-        return response("vehicle made available")
+        return Response("vehicle made available")
 
 
 
@@ -109,7 +129,7 @@ class VehicleView(ViewSet):
         vehicle = Vehicle.objects.get(id=id)
         vehicle.is_available="False"
         vehicle.save()
-        return response("vehicle made unavailable")
+        return Response("vehicle made unavailable")
 
 
 
